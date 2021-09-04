@@ -1,0 +1,79 @@
+version: '3'
+
+services: 
+  supermarket-db:
+    restart: always
+    image: mariadb:10.2
+    container_name: supermarket-db
+    environment: 
+      MYSQL_ROOT_PASSWORD: 123
+      MYSQL_DATABASE: supermarket_db
+      MYSQL_USER: supermarket
+      MYSQL_PASSWORD: 2021
+    ports:
+      - 3307:3306
+    volumes:
+      - ./supermarket_db:/var/lib/mysql
+  supermarket-db2:
+    restart: always
+    image: mongo:4.2.0
+    container_name: supermarket-db2
+    environment: 
+      MONGO_INITDB_ROOT_USERNAME: supermarket
+      MONGO_INITDB_ROOT_PASSWORD: 1234
+    ports:
+      - 27017:27017
+    volumes:
+      - ./supermarket_db2:/data/db
+  supermarket-ms:
+    restart: always
+    container_name: supermarket-ms
+    ports:
+      - 4000:4000
+    build: ./supermarket_ms
+    environment: 
+      DB_HOST: supermarket-db
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: 123
+      DB_NAME: supermarket_db
+      URL: 0.0.0.0:4000
+    depends_on: 
+      - supermarket-db
+    links: 
+      - supermarket-db
+  supermarket-ms2:
+    restart: always
+    container_name: supermarket-ms2
+    ports:
+      - 4001:4001
+    build: ./supermarket_ms2
+    environment: 
+      DB_HOST: supermarket-db2
+      DB_PORT: 27017
+      DB_USER: supermarket
+      DB_PASSWORD: 1234
+      DB_NAME: supermarket_db
+      PORT: 4001
+    depends_on: 
+      - supermarket-db2
+    links: 
+      - supermarket-db2
+  supermarket-api:
+    restart: always
+    container_name: supermarket-api
+    ports:
+      - 5001:5000
+    build: ./supermarket_api
+    environment: 
+      MS_URL: supermarket-ms
+      MS_PORT: 4000
+      MS2_URL: supermarket-ms2
+      MS2_PORT: 4001
+      SHOW_URLS: true
+    depends_on: 
+      - supermarket-ms
+      - supermarket-ms2
+    links: 
+      - supermarket-ms
+      - supermarket-ms2
