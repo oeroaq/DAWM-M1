@@ -36,13 +36,26 @@
                 this.username = this.$route.params.username
                 let self = this
 
-                axios.get("http://localhost:4000/categories/" + 1)
+                axios.post(`http://supermarket-api:5000/graphql`,
+                {
+                  query: `
+                    query{
+                        categoryById(id: 1){
+                          name
+                          id
+                          description
+                        }
+                      }
+                  `
+                }
+                )
                     .then((result) => {
-                        self.category_id = result.data.id,
-                        self.name = result.data.name,
-                        self.description = result.data.description
+                        self.category_id = result.data.data.categoryById.id,
+                        self.name = result.data.data.categoryById.name,
+                        self.description = result.data.data.categoryById.description
                     })
                     .catch((error) => {
+                        console.log(error)
                         alert("ERROR de Servidor");
                     });
             }

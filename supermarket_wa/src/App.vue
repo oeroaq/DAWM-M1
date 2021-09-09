@@ -7,6 +7,7 @@
         <button v-on:click="init" v-if="is_auth">Inicio</button>
         <button v-on:click="categories" v-if="is_auth">Categorías</button>
         <button v-if="is_auth">Productos</button>
+        <button v-on:click="inventarios" v-if="is_auth">Inventarios</button>
         <button v-if="is_auth">Cerrar Sesión</button>
       </nav>
     </div>
@@ -44,6 +45,13 @@
         if(this.$route.name != "categories"){
           let username = localStorage.getItem("current_username")
           this.$router.push({name: "categories", params:{ username: username }})
+        }
+      },
+
+      inventarios: function(){
+        if(this.$route.name != "inventarios"){
+          let username = localStorage.getItem("current_username")
+          this.$router.push({name: "inventarios", params:{ username: username }})
         }
       },
 

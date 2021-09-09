@@ -11,7 +11,7 @@ export const inventarioTypeDef = `
 
 export const inventarioQueries = `
       allInventarios: [Inventario]!
-      inventarioById(id: Int!): Inventario!
+      inventarioById(id: String!): Inventario!
   `;
 
 export const inventarioMutations = `

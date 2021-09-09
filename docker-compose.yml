@@ -77,3 +77,14 @@ services:
     links: 
       - supermarket-ms
       - supermarket-ms2
+  supermarket-wa:
+    restart: always
+    container_name: supermarket-wa
+    ports:
+      - 8081:8080
+    build: ./supermarket_wa
+    depends_on: 
+      - supermarket-api
+    links: 
+      - supermarket-api
+
